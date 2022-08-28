@@ -65,6 +65,12 @@ class Blockchain {
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
+            let errorLog = await self.validateChain();
+            if(errorLog.length > 0){
+                console.log('Chain has errors');
+                let errorText = errorLog.join("\r\n");
+                reject(new Error(`Chain has errors: ${errorText}`))
+            }
             try {
                 let newHeight = this.height  + 1 ;
                 block.height = newHeight ;
@@ -73,8 +79,9 @@ class Blockchain {
                     block.previousBlockHash = previousBlock.hash;
                 }
                 this.height++;
-                block.hash = SHA256(JSON.stringify(block)).toString();
                 block.time = new Date().getTime().toString().slice(0,-3);
+                block.hash = SHA256(JSON.stringify(block)).toString();
+                console.log(`hash computed as ${block.hash} is _addBlock`)
                 self.chain.push(block);
                 resolve(block);
             }
@@ -164,7 +171,7 @@ class Blockchain {
     getBlockByHeight(height) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let block = self.chain.filter(p => p.height === height)[0];
+            let block = users.find((p) => p.height === height);
             if(block){
                 resolve(block);
             } else {
@@ -183,10 +190,12 @@ class Blockchain {
         let self = this;
         let stars = [];
         return new Promise((resolve, reject) => {
-            self.chain.forEach(async(b) => {
-                let data = await b.getBData();
-                if (data.owner === address) stars.push(data);
-            });
+            if(self.height >= 1){
+                self.chain.forEach(async(b) => {
+                    let data = await b.getBData();
+                    if (data.owner === address) stars.push(data);
+                });
+            }
             resolve(stars);
         });
     }
@@ -201,24 +210,25 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            self.chain.forEach(async(b) => {
+            // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop/37576787#37576787
+            for(const b of self.chain) {
                 try{
                     // check the block validates
                     await b.validate();
                     // check the block's previous block hash matches the previous on the chain
-                    if(b.previousBlockHash !== self.chain[b.height - 1].hash){
-                        errorLog.push(new Error(`block at height ${b.height} does not match previous block`));
+                    if (b.height > 0){
+                        if(b.previousBlockHash !== self.chain[b.height - 1].hash){
+                            errorLog.push(new Error(`block at height ${b.height} does not match previous block`));
+                        }
                     }
                 }
                 catch(error){
                     errorLog.push(error);
                 }
-                
-            });
+            }
             resolve(errorLog);
         });
     }
-
 }
 
 module.exports.Blockchain = Blockchain;   

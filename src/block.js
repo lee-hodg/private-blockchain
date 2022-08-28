@@ -39,17 +39,27 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
+            // The reason why hash value is set to null is that when the block 
+            // was added to the chain using _addBlock() then the hash property was null.
+            // At that time, only time, previousBlockHash, height and body were used to
+            //calculate the hash value. So, we are simulating the same behavior here. 
+            //If any of the block properties are modified then the newly calculated hash 
+            // value will be different from the original hash value.
             let currentBlockHash = self.hash;
+            self.hash = null;
                                             
             // Recalculate the hash of the Block
             // Comparing if the hashes changed
             // Returning the Block is not valid
             let newBlockHash = SHA256(JSON.stringify(self)).toString();
             
+            self.hash = currentBlockHash;
+
             // Returning the Block is valid
             if (currentBlockHash === newBlockHash){
                 resolve(true);
             }else{
+                console.log(`block at height ${self.height} original currentBlockHash: ${currentBlockHash} vs new ${newBlockHash}`)
                 reject(false);
             }
 
