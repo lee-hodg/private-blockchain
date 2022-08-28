@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "0292bfb2-8d16-4d84-a3be-3743a9d125f2",
+		"name": "UdacityPrivateBlockchain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4856788"
+	},
+	"item": [
+		{
+			"name": "/block/height/:height/",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "/requestValidation/ (new ownership request)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\": \"tb1qsg69mqqk689zjazufs934wnuthpskwe9egl5vz\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/requestValidation/",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"requestValidation",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/submitStar/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\": \"n1buFvrsg2bwWoCUGbHKLrMxauomJaJtdZ\",\n\"signature\": \"HwYlrX3QPnVdRBr3LdB/VOi5XKupqM02nD7zKMOIhwUkCJOwWfqMgVnzOs9+pres1PggMOVWEVQRP0VvJKVwurQ=\",\n\"message\": \"n1buFvrsg2bwWoCUGbHKLrMxauomJaJtdZ:1661662562:starRegistry\",\n     \"star\": {\n         \"dec\": \"68° 52' 56.9\",\n         \"ra\": \"16h 29m 1.0s\",\n         \"story\": \"Testing the story 4\"\n     }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/submitStar/",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"submitStar",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/blocks/:address/ (stars owned by this address)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/blocks/n1buFvrsg2bwWoCUGbHKLrMxauomJaJtdZ/",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"blocks",
+						"n1buFvrsg2bwWoCUGbHKLrMxauomJaJtdZ",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/block/hash/:hash/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/block/hash/c92e167b21dbc0068ad1a53b98fc0d20ac713ce49574f81dbd16c3db0c745581/",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"block",
+						"hash",
+						"c92e167b21dbc0068ad1a53b98fc0d20ac713ce49574f81dbd16c3db0c745581",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
